@@ -1,8 +1,21 @@
-#' Interactive validation of text
-
-library(magrittr)
-require(crayon)
-require(stringr)
+#' Merges Variables Into a Date Variable 
+#'
+#' This function lets you go through data, labelling it as either
+#' 1 or 0. Useful for validating data. 
+#' Enter numbers corresponding to entries displayed, unseparated.
+#'
+#' @param df Dataset to work with
+#' @param col Column containing data to be displayed 
+#' @param samplesize How many entries to display at once
+#' @param reset Reset the process / all "seen" <- 0
+#' @param idcol Values from idcol are displayed next to values from col.
+#' @keywords validation 
+#' @export
+#' @importFrom magrittr "%>%"
+#' @examples
+#' mtcars$names <- rownames(mtcars)
+#' mtcars$brand <- lapply(strsplit(mtcars$names,' '),function(x)x[1]) %>% unlist()
+#' valMt <- iaValidate(mtcars,col = 'names',samplesize = 5,idcol = 'brand') 
 
 iaValidate <- function(df,col,samplesize = 5,reset = FALSE,idcol = 'id'){
 
@@ -88,16 +101,12 @@ iaValidate <- function(df,col,samplesize = 5,reset = FALSE,idcol = 'id'){
          cat(crayon::blue(paste('Seen ',seenno,' rows. (',seenpst,'%)',sep = '')),'\n')
          
          notseen <- df[df$seen != 1,] 
-         print(nrow(notseen))
 
          if(nrow(notseen) > samplesize){
-            writeLines('eek')
             subsample <- notseen[sample(nrow(notseen),size = samplesize),]
          } else if (nrow(notseen) > 0) {
-            writeLines('off')
             subsample <- notseen
          } else {
-            writeLines('ow')
             running <- FALSE
          }
        
